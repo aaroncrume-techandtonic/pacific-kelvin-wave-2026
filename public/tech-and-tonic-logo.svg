@@ -1,0 +1,22 @@
+<svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Central Atom Nucleus -->
+  <circle cx="112" cy="124" r="22" fill="#475569" />
+
+  <!-- Orbit 1: Tilted -30 deg -->
+  <ellipse cx="112" cy="124" rx="72" ry="34" transform="rotate(-30 112 124)" stroke="#475569" stroke-width="7" stroke-linecap="round" />
+  <!-- Orbit 2: Tilted 30 deg -->
+  <ellipse cx="112" cy="124" rx="72" ry="34" transform="rotate(30 112 124)" stroke="#475569" stroke-width="7" stroke-linecap="round" />
+  <!-- Orbit 3: Vertical-ish (90 deg) -->
+  <ellipse cx="112" cy="124" rx="72" ry="34" transform="rotate(90 112 124)" stroke="#475569" stroke-width="7" stroke-linecap="round" />
+
+  <!-- Electrons -->
+  <circle cx="116" cy="48" r="10" fill="#475569" />
+  <circle cx="56" cy="156" r="9.5" fill="#475569" />
+  <circle cx="172" cy="96" r="9.5" fill="#475569" />
+
+  <!-- Botanical Tonic Sprout -->
+  <path d="M 144 88 Q 168 64 188 30" stroke="#659b73" stroke-width="7.5" stroke-linecap="round" fill="none" />
+  <path d="M 160 68 C 148 54 150 36 168 36 C 176 46 172 62 160 68 Z" fill="#659b73" />
+  <path d="M 172 64 C 190 66 206 54 208 36 C 192 34 178 48 172 64 Z" fill="#659b73" />
+  <path d="M 188 30 C 186 14 196 4 208 6 C 212 20 204 32 188 30 Z" fill="#659b73" />
+</svg>

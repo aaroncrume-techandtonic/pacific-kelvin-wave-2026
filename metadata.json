@@ -1,6 +1,6 @@
 {
   "name": "The 2026 Pacific Kelvin Wave Infographic",
-  "description": "Interactive scientific infographic exploring the planetary Kelvin wave driving the historic 2026/2027 Super El Niño across the Pacific Ocean.",
+  "description": "Interactive scientific infographic exploring the planetary Kelvin wave driving the historic 2026/2027 Super El Niño across the Pacific Ocean, by Tech & Tonic (techandtonic.tech).",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

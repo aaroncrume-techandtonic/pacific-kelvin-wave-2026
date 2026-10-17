@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { Play, Pause, RotateCcw, Crosshair, Eye, Sparkles, Navigation, Layers, BookmarkPlus, MapPin, Trash2, X, Plus } from 'lucide-react';
+import { Play, Pause, RotateCcw, Crosshair, Eye, Sparkles, Navigation, Layers, BookmarkPlus, MapPin, Trash2, X, Plus, Flame, Thermometer } from 'lucide-react';
 import { BUOY_STATIONS } from '../data/scientificData';
 import { BuoyStation } from '../types/kelvin';
 
@@ -62,6 +62,7 @@ export const WaveCanvas: React.FC<WaveCanvasProps> = ({
   const [showBuoys, setShowBuoys] = useState(true);
   const [showWindArrows, setShowWindArrows] = useState(true);
   const [showIsotherms, setShowIsotherms] = useState(true);
+  const [showThermalHeatmap, setShowThermalHeatmap] = useState(true);
 
   // Particles for advection flow
   const particlesRef = useRef<Particle[]>([]);
@@ -183,53 +184,141 @@ export const WaveCanvas: React.FC<WaveCanvasProps> = ({
     ctx.fillStyle = upperGradient;
     ctx.fill(thermoclinePath);
 
-    // 3. Draw the Subsurface Downwelling Kelvin Wave Heat Core (>10°C anomaly)
+    // 3. Draw the Subsurface Downwelling Kelvin Wave Heat Core & Dynamic Thermal Heatmap
     if (waveX > -waveWidth && waveX < width + waveWidth) {
       const coreBaseY = thermoclineWestY - (waveX / width) * (thermoclineWestY - thermoclineEastY);
       const coreY = coreBaseY + waveAmplitude * 0.65;
 
-      // Glow effect
       ctx.save();
-      const coreGlow = ctx.createRadialGradient(waveX, coreY, 15, waveX, coreY, waveWidth * 0.95);
-      coreGlow.addColorStop(0, 'rgba(239, 68, 68, 0.95)'); // fiery red core
-      coreGlow.addColorStop(0.25, 'rgba(249, 115, 22, 0.85)'); // vibrant orange
-      coreGlow.addColorStop(0.55, 'rgba(234, 179, 8, 0.45)'); // golden amber
-      coreGlow.addColorStop(0.85, 'rgba(2, 132, 199, 0.15)'); // blend into upper water
-      coreGlow.addColorStop(1, 'rgba(2, 132, 199, 0)');
 
-      ctx.fillStyle = coreGlow;
-      ctx.beginPath();
-      ctx.ellipse(waveX, coreY, waveWidth * 0.85, waveAmplitude * 0.8, 0, 0, Math.PI * 2);
-      ctx.fill();
+      if (showThermalHeatmap) {
+        // ================= DYNAMIC THERMAL INTENSITY HEATMAP OVERLAY =================
+        // A. Multi-Scale Continuous Thermal Anomaly Field
+        const heatField = ctx.createRadialGradient(waveX, coreY, 8, waveX, coreY, waveWidth * 1.35);
+        heatField.addColorStop(0, 'rgba(255, 255, 255, 0.98)'); // Super-heated white-hot core
+        heatField.addColorStop(0.12, 'rgba(255, 0, 110, 0.95)'); // +11.8°C Extreme anomaly (magenta/crimson)
+        heatField.addColorStop(0.28, 'rgba(239, 68, 68, 0.90)'); // +9.5°C Severe downwelling (fiery red)
+        heatField.addColorStop(0.48, 'rgba(249, 115, 22, 0.78)'); // +7.0°C High heat anomaly (vibrant orange)
+        heatField.addColorStop(0.68, 'rgba(234, 179, 8, 0.52)'); // +4.5°C Moderate warming (golden amber)
+        heatField.addColorStop(0.85, 'rgba(16, 185, 129, 0.25)'); // +2.0°C Outer ambient warming (lime/emerald)
+        heatField.addColorStop(1, 'rgba(6, 182, 212, 0)'); // Dissipation into surrounding ocean
 
-      // Inner intense core circle
-      const innerCore = ctx.createRadialGradient(waveX, coreY, 0, waveX, coreY, 40);
-      innerCore.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
-      innerCore.addColorStop(0.4, 'rgba(254, 202, 202, 0.8)');
-      innerCore.addColorStop(0.8, 'rgba(239, 68, 68, 0.8)');
-      innerCore.addColorStop(1, 'rgba(239, 68, 68, 0)');
-      ctx.fillStyle = innerCore;
-      ctx.beginPath();
-      ctx.arc(waveX, coreY, 35, 0, Math.PI * 2);
-      ctx.fill();
+        ctx.fillStyle = heatField;
+        ctx.beginPath();
+        ctx.ellipse(waveX, coreY, waveWidth * 1.25, waveAmplitude * 1.15, 0, 0, Math.PI * 2);
+        ctx.fill();
 
-      // Core annotation tag
-      if (waveX > 70 && waveX < width - 70) {
-        ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
-        ctx.strokeStyle = 'rgba(239, 68, 68, 0.8)';
-        ctx.lineWidth = 1;
+        // B. Forward Thermal Advection Plume (Heat transported eastward)
+        const plumeGrad = ctx.createRadialGradient(waveX + 30, coreY - 10, 10, waveX + 60, coreY - 5, waveWidth * 0.9);
+        plumeGrad.addColorStop(0, 'rgba(251, 146, 60, 0.45)');
+        plumeGrad.addColorStop(0.6, 'rgba(234, 179, 8, 0.2)');
+        plumeGrad.addColorStop(1, 'rgba(2, 132, 199, 0)');
+        ctx.fillStyle = plumeGrad;
+        ctx.beginPath();
+        ctx.ellipse(waveX + 40, coreY - 10, waveWidth * 0.95, waveAmplitude * 0.75, 0.15, 0, Math.PI * 2);
+        ctx.fill();
+
+        // C. Dynamic Thermal Anomaly Contour Shells (Isopleths: +10°C, +8°C, +6°C, +4°C, +2°C)
+        const isopleths = [
+          { rx: waveWidth * 0.28, ry: waveAmplitude * 0.28, color: 'rgba(255, 255, 255, 0.85)', label: '+10.4°C Core', dash: [3, 2], lw: 1.5 },
+          { rx: waveWidth * 0.52, ry: waveAmplitude * 0.52, color: 'rgba(239, 68, 68, 0.75)', label: '+8.0°C', dash: [4, 3], lw: 1.2 },
+          { rx: waveWidth * 0.78, ry: waveAmplitude * 0.78, color: 'rgba(249, 115, 22, 0.65)', label: '+6.0°C', dash: [5, 4], lw: 1.1 },
+          { rx: waveWidth * 1.05, ry: waveAmplitude * 0.98, color: 'rgba(234, 179, 8, 0.5)', label: '+4.0°C', dash: [6, 4], lw: 1.0 },
+          { rx: waveWidth * 1.28, ry: waveAmplitude * 1.18, color: 'rgba(6, 182, 212, 0.4)', label: '+2.0°C Anom.', dash: [8, 5], lw: 0.9 },
+        ];
+
+        isopleths.forEach((iso) => {
+          ctx.beginPath();
+          ctx.ellipse(waveX, coreY, iso.rx, iso.ry, 0, 0, Math.PI * 2);
+          ctx.strokeStyle = iso.color;
+          ctx.lineWidth = iso.lw;
+          ctx.setLineDash(iso.dash);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // Labeled isopleth tag on the right flank
+          if (waveX + iso.rx + 25 < width - 20) {
+            ctx.font = 'bold 8.5px JetBrains Mono, monospace';
+            ctx.fillStyle = iso.color;
+            ctx.textAlign = 'left';
+            ctx.fillText(iso.label, waveX + iso.rx + 4, coreY + 3);
+          }
+        });
+
+        // D. Vertical Downwelling Velocity Vectors (Fluid moving downward)
+        ctx.strokeStyle = 'rgba(254, 215, 170, 0.65)';
+        ctx.fillStyle = 'rgba(254, 215, 170, 0.65)';
+        ctx.lineWidth = 1.4;
+        [-waveWidth * 0.35, 0, waveWidth * 0.35].forEach((offset) => {
+          const vx = waveX + offset;
+          const vyTop = coreY - waveAmplitude * 0.45;
+          const vyBottom = coreY + waveAmplitude * 0.25;
+
+          ctx.beginPath();
+          ctx.moveTo(vx, vyTop);
+          ctx.lineTo(vx, vyBottom);
+          ctx.stroke();
+
+          // Arrowhead pointing down
+          ctx.beginPath();
+          ctx.moveTo(vx - 3.5, vyBottom - 5);
+          ctx.lineTo(vx, vyBottom);
+          ctx.lineTo(vx + 3.5, vyBottom - 5);
+          ctx.fill();
+        });
+
+        // E. Central White-Hot Core Nucleus
+        const centerNucleus = ctx.createRadialGradient(waveX, coreY, 0, waveX, coreY, 28);
+        centerNucleus.addColorStop(0, '#ffffff');
+        centerNucleus.addColorStop(0.35, 'rgba(254, 202, 202, 0.95)');
+        centerNucleus.addColorStop(0.7, 'rgba(239, 68, 68, 0.9)');
+        centerNucleus.addColorStop(1, 'rgba(239, 68, 68, 0)');
+        ctx.fillStyle = centerNucleus;
+        ctx.beginPath();
+        ctx.arc(waveX, coreY, 26, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        // Standard Classic Core Rendering (when heatmap overlay is off)
+        const coreGlow = ctx.createRadialGradient(waveX, coreY, 15, waveX, coreY, waveWidth * 0.95);
+        coreGlow.addColorStop(0, 'rgba(239, 68, 68, 0.95)');
+        coreGlow.addColorStop(0.25, 'rgba(249, 115, 22, 0.85)');
+        coreGlow.addColorStop(0.55, 'rgba(234, 179, 8, 0.45)');
+        coreGlow.addColorStop(0.85, 'rgba(2, 132, 199, 0.15)');
+        coreGlow.addColorStop(1, 'rgba(2, 132, 199, 0)');
+
+        ctx.fillStyle = coreGlow;
+        ctx.beginPath();
+        ctx.ellipse(waveX, coreY, waveWidth * 0.85, waveAmplitude * 0.8, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        const innerCore = ctx.createRadialGradient(waveX, coreY, 0, waveX, coreY, 40);
+        innerCore.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+        innerCore.addColorStop(0.4, 'rgba(254, 202, 202, 0.8)');
+        innerCore.addColorStop(0.8, 'rgba(239, 68, 68, 0.8)');
+        innerCore.addColorStop(1, 'rgba(239, 68, 68, 0)');
+        ctx.fillStyle = innerCore;
+        ctx.beginPath();
+        ctx.arc(waveX, coreY, 35, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Floating Core Telemetry Badge
+      if (waveX > 75 && waveX < width - 75) {
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+        ctx.strokeStyle = showThermalHeatmap ? '#ef4444' : 'rgba(239, 68, 68, 0.8)';
+        ctx.lineWidth = 1.5;
         const tagX = waveX;
-        const tagY = coreY + 45;
-        const text = 'KELVIN CORE: +10.4°C ANOMALY';
+        const tagY = coreY + 48;
+        const text = showThermalHeatmap ? '🔥 THERMAL CORE: +10.4°C ANOMALY' : 'KELVIN CORE: +10.4°C ANOMALY';
         ctx.font = 'bold 10px JetBrains Mono, monospace';
         const txtWidth = ctx.measureText(text).width;
 
         ctx.beginPath();
-        ctx.roundRect(tagX - txtWidth / 2 - 8, tagY - 10, txtWidth + 16, 20, 4);
+        ctx.roundRect(tagX - txtWidth / 2 - 10, tagY - 11, txtWidth + 20, 22, 5);
         ctx.fill();
         ctx.stroke();
 
-        ctx.fillStyle = '#fca5a5';
+        ctx.fillStyle = '#fecaca';
         ctx.textAlign = 'center';
         ctx.fillText(text, tagX, tagY + 4);
       }
@@ -443,7 +532,7 @@ export const WaveCanvas: React.FC<WaveCanvasProps> = ({
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
       ctx.stroke();
     });
-  }, [progress, playbackSpeed, showParticles, showBuoys, showWindArrows, showIsotherms]);
+  }, [progress, playbackSpeed, showParticles, showBuoys, showWindArrows, showIsotherms, showThermalHeatmap]);
 
   // Helper for drawing wind arrows
   const drawWindArrow = (
@@ -723,6 +812,21 @@ export const WaveCanvas: React.FC<WaveCanvasProps> = ({
 
         {/* Layer Toggles */}
         <div className="flex items-center gap-2 text-slate-400">
+          {/* Dynamic Thermal Intensity Heatmap Overlay Toggle */}
+          <button
+            onClick={() => setShowThermalHeatmap(!showThermalHeatmap)}
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded border text-[11px] font-semibold transition-all cursor-pointer ${
+              showThermalHeatmap
+                ? 'bg-gradient-to-r from-red-950/90 via-orange-950/80 to-amber-950/70 border-red-500/70 text-red-200 shadow-[0_0_12px_rgba(239,68,68,0.35)] ring-1 ring-red-400/50'
+                : 'bg-slate-800/50 border-slate-700 text-slate-400 hover:text-slate-200'
+            }`}
+            title="Toggle dynamic thermal intensity anomaly heatmap overlay"
+          >
+            <Flame className={`w-3.5 h-3.5 ${showThermalHeatmap ? 'text-red-400 animate-pulse' : 'text-slate-500'}`} />
+            <span>Thermal Heatmap</span>
+            <span className={`w-1.5 h-1.5 rounded-full ${showThermalHeatmap ? 'bg-red-400 animate-ping' : 'bg-slate-600'}`}></span>
+          </button>
+
           <button
             onClick={() => setShowParticles(!showParticles)}
             className={`flex items-center gap-1 px-2 py-1 rounded border text-[11px] transition-colors ${
@@ -847,6 +951,16 @@ export const WaveCanvas: React.FC<WaveCanvasProps> = ({
           onClick={handleCanvasClick}
           className="block w-full h-full cursor-crosshair select-none"
         />
+
+        {/* Dynamic Thermal Heatmap Status Pill in Top-Right */}
+        {showThermalHeatmap && (
+          <div className="absolute top-3 right-4 z-20 hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-slate-950/85 border border-red-500/40 text-[11px] font-mono shadow-xl backdrop-blur-md">
+            <span className="w-2 h-2 rounded-full bg-red-400 animate-ping"></span>
+            <span className="text-red-300 font-bold">Thermal Heatmap Active</span>
+            <span className="text-slate-500">|</span>
+            <span className="text-white font-bold">+10.4°C Anomaly</span>
+          </div>
+        )}
 
         {/* Annotate Mode Instruction Banner */}
         {isAnnotating && (
@@ -1026,30 +1140,59 @@ export const WaveCanvas: React.FC<WaveCanvasProps> = ({
           </div>
         )}
 
-        {/* Static Legend Overlay (as requested in user prompt, elevated with interactive details) */}
-        <div className="absolute bottom-11 left-4 right-4 md:right-auto bg-slate-900/85 p-3.5 rounded-xl border border-slate-700/80 text-xs text-slate-300 space-y-1.5 backdrop-blur-md shadow-xl max-w-sm pointer-events-auto">
+        {/* Static Legend Overlay & Dynamic Thermal Heatmap Scale */}
+        <div className="absolute bottom-11 left-4 right-4 md:right-auto bg-slate-900/90 p-3.5 rounded-xl border border-slate-700/80 text-xs text-slate-300 space-y-2 backdrop-blur-md shadow-2xl max-w-sm pointer-events-auto">
           <div className="flex items-center justify-between mb-1">
-            <span className="font-bold text-white uppercase tracking-wider text-[11px]">Scientific Legend</span>
-            <span className="text-[10px] text-cyan-400 font-mono">2026 Live Transect</span>
+            <span className="font-bold text-white uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+              <Layers className="w-3.5 h-3.5 text-cyan-400" />
+              Scientific Transect Legend
+            </span>
+            <span className="text-[10px] text-cyan-400 font-mono">2026/27 Live</span>
           </div>
+
+          {/* Dynamic Thermal Anomaly Colormap (Shown when Heatmap Overlay is active) */}
+          {showThermalHeatmap && (
+            <div className="p-2 rounded-lg bg-slate-950/80 border border-red-500/30 space-y-1">
+              <div className="flex items-center justify-between text-[10px] font-mono">
+                <span className="text-red-300 font-bold flex items-center gap-1">
+                  <Flame className="w-3 h-3 text-red-400" />
+                  Thermal Anomaly Heatmap (ΔT)
+                </span>
+                <span className="text-white font-bold bg-red-950 px-1.5 py-0.2 rounded border border-red-500/50">
+                  Peak: +10.4°C
+                </span>
+              </div>
+              {/* Continuous Colormap Bar */}
+              <div className="h-2.5 w-full rounded bg-gradient-to-r from-cyan-500 via-yellow-400 via-orange-500 via-red-600 to-pink-500 border border-slate-700 shadow-inner"></div>
+              <div className="flex justify-between text-[8.5px] font-mono text-slate-400">
+                <span>0°C</span>
+                <span>+2°C</span>
+                <span>+4°C</span>
+                <span>+6°C</span>
+                <span>+8°C</span>
+                <span className="text-red-300 font-bold">+10°C+</span>
+              </div>
+            </div>
+          )}
+
           <div className="flex items-center gap-2.5">
-            <div className="w-3.5 h-3.5 bg-sky-600 rounded shadow-sm"></div>
+            <div className="w-3.5 h-3.5 bg-sky-600 rounded shadow-sm shrink-0"></div>
             <span className="text-slate-300">Mixed Surface Layer (28–30°C)</span>
           </div>
           <div className="flex items-center gap-2.5">
-            <div className="w-3.5 h-3.5 bg-slate-950 border border-slate-700 rounded shadow-sm"></div>
+            <div className="w-3.5 h-3.5 bg-slate-950 border border-slate-700 rounded shadow-sm shrink-0"></div>
             <span className="text-slate-300">Deep Abyssal Ocean (&lt;10°C)</span>
           </div>
           <div className="flex items-center gap-2.5">
-            <div className="w-3.5 h-3.5 bg-gradient-to-r from-orange-500 to-red-600 rounded shadow-[0_0_8px_rgba(239,68,68,0.7)]"></div>
-            <span className="text-red-300 font-medium">Kelvin Wave Core (&gt;10°C Anomaly)</span>
+            <div className="w-3.5 h-3.5 bg-gradient-to-r from-orange-500 to-red-600 rounded shadow-[0_0_8px_rgba(239,68,68,0.7)] shrink-0"></div>
+            <span className="text-red-300 font-medium">Kelvin Wave Core (&gt;10°C Downwelling)</span>
           </div>
           <div className="flex items-center gap-2.5">
-            <div className="w-4 border-t-2 border-dashed border-white"></div>
+            <div className="w-4 border-t-2 border-dashed border-white shrink-0"></div>
             <span className="text-slate-300">Thermocline (20°C Isotherm)</span>
           </div>
           <div className="flex items-center gap-2.5">
-            <div className="w-3 h-3 rounded-full bg-red-500 border border-white"></div>
+            <div className="w-3 h-3 rounded-full bg-red-500 border border-white shrink-0"></div>
             <span className="text-slate-400">TAO/TRITON Moored Array Station</span>
           </div>
         </div>

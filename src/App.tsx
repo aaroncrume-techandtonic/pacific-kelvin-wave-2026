@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { WaveCanvas } from './components/WaveCanvas';
 import { SshSatelliteMap } from './components/SshSatelliteMap';
 import { ThermoclineComparison } from './components/ThermoclineComparison';
@@ -11,8 +11,12 @@ import { BuoyInspectorModal } from './components/BuoyInspectorModal';
 import { TeleconnectionsModal } from './components/TeleconnectionsModal';
 import { GlossaryModal } from './components/GlossaryModal';
 import { ShareScenarioModal } from './components/ShareScenarioModal';
+import { ExportPdfModal } from './components/ExportPdfModal';
+import { TechAndTonicLogo } from './components/TechAndTonicLogo';
+import { OceanParticulateBackground } from './components/OceanParticulateBackground';
+import { HistoricalTimelineOverlay } from './components/HistoricalTimelineOverlay';
 import { ViewMode, BuoyStation } from './types/kelvin';
-import { Compass, Waves, Radio, Sliders, BookOpen, Globe2, Sparkles, MapPin, Share2 } from 'lucide-react';
+import { Compass, Waves, Radio, Sliders, BookOpen, Globe2, Sparkles, MapPin, Share2, FileDown, ExternalLink } from 'lucide-react';
 
 export default function App() {
   // Wave animation progress (-0.3 to 1.3)
@@ -29,6 +33,7 @@ export default function App() {
   const [teleconnectionRegion, setTeleconnectionRegion] = useState<string | undefined>(undefined);
   const [showGlossary, setShowGlossary] = useState<boolean>(false);
   const [showShareModal, setShowShareModal] = useState<boolean>(false);
+  const [showExportPdf, setShowExportPdf] = useState<boolean>(false);
 
   // Restore simulation scenario state from URL search parameters on mount
   useEffect(() => {
@@ -74,15 +79,102 @@ export default function App() {
     setShowTeleconnections(true);
   };
 
+  // Stable callbacks for HistoricalTimelineOverlay
+  const handleProgressChange = useCallback((newProg: number) => {
+    setProgress(newProg);
+  }, []);
+
+  const handleTogglePlay = useCallback(() => {
+    setIsPlaying((prev) => !prev);
+  }, []);
+
+  const handlePauseSimulation = useCallback(() => {
+    setIsPlaying(false);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#020617] text-slate-200 font-sans selection:bg-cyan-500 selection:text-white">
       {/* Top Ambient Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-blue-600/15 rounded-full blur-[140px] pointer-events-none z-0"></div>
       <div className="absolute top-48 left-1/3 w-[500px] h-[400px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none z-0"></div>
 
+      {/* Sticky Persistent Top Brand & Navigation Bar */}
+      <nav className="sticky top-0 z-40 bg-slate-950/85 backdrop-blur-md border-b border-slate-800/80 px-4 py-2.5 shadow-md">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+          {/* Brand Logo & Persistent Link to techandtonic.tech */}
+          <a
+            href="https://techandtonic.tech"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 group hover:opacity-95 transition-all cursor-pointer"
+            title="Visit Tech & Tonic (techandtonic.tech)"
+          >
+            <TechAndTonicLogo variant="horizontal" size="sm" lightText={true} />
+            <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono text-emerald-300 bg-emerald-950/60 border border-emerald-500/30 group-hover:border-emerald-400 transition-colors">
+              techandtonic.tech
+              <ExternalLink className="w-2.5 h-2.5 text-emerald-400" />
+            </span>
+          </a>
+
+          {/* Quick Actions & Persistent Website Link */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowExportPdf(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 text-xs font-semibold border border-blue-500/40 transition-all cursor-pointer"
+              title="Export formatted PDF scientific summary report"
+            >
+              <FileDown className="w-3.5 h-3.5 text-blue-400" />
+              <span className="hidden sm:inline">Export PDF</span>
+            </button>
+
+            <button
+              onClick={() => setShowShareModal(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 text-xs font-semibold border border-cyan-500/40 transition-all cursor-pointer"
+              title="Share simulation scenario link"
+            >
+              <Share2 className="w-3.5 h-3.5 text-cyan-400" />
+              <span className="hidden sm:inline">Share</span>
+            </button>
+
+            <a
+              href="https://techandtonic.tech"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 text-xs font-bold transition-all shadow-[0_0_15px_rgba(16,185,129,0.25)] hover:scale-105 cursor-pointer"
+              title="Visit techandtonic.tech"
+            >
+              <span>techandtonic.tech</span>
+              <ExternalLink className="w-3 h-3 text-slate-950 stroke-[2.5]" />
+            </a>
+          </div>
+        </div>
+      </nav>
+
       {/* Navigation & Header */}
-      <header className="relative pt-16 pb-12 px-4 overflow-hidden border-b border-slate-800/80">
+      <header className="relative pt-12 pb-12 px-4 overflow-hidden border-b border-slate-800/80">
+        {/* Subtle Ambient Ocean Particulates & Atmospheric Molecule Drift */}
+        <OceanParticulateBackground particleCount={60} />
+
         <div className="relative z-10 max-w-5xl mx-auto text-center space-y-6">
+          {/* Tech & Tonic Hero Presenter Badge */}
+          <div className="flex justify-center">
+            <a
+              href="https://techandtonic.tech"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 px-4 py-2 rounded-2xl bg-slate-900/90 hover:bg-slate-800/90 border border-slate-700/80 shadow-lg group transition-all hover:scale-105"
+              title="Visit Tech & Tonic at techandtonic.tech"
+            >
+              <TechAndTonicLogo variant="mark-only" size="sm" lightText={true} />
+              <div className="text-left text-xs">
+                <span className="text-slate-400 text-[10px] block uppercase font-mono tracking-wider">A Climate Dynamics Exploration by</span>
+                <span className="text-white font-bold group-hover:text-emerald-300 transition-colors flex items-center gap-1.5">
+                  Tech &amp; Tonic <span className="text-emerald-400 font-mono text-[11px]">· techandtonic.tech ↗</span>
+                </span>
+              </div>
+            </a>
+          </div>
+
           {/* Live Data Badge & Action Links */}
           <div className="flex flex-wrap items-center justify-center gap-3">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-900/50 border border-blue-500/40 text-blue-300 text-xs font-semibold tracking-wide uppercase shadow-[0_0_15px_rgba(59,130,246,0.3)]">
@@ -92,7 +184,7 @@ export default function App() {
 
             <button
               onClick={() => setShowGlossary(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 text-xs font-medium border border-slate-700 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 text-xs font-medium border border-slate-700 transition-colors cursor-pointer"
             >
               <BookOpen className="w-3.5 h-3.5 text-cyan-400" />
               <span>Physics Glossary</span>
@@ -100,7 +192,7 @@ export default function App() {
 
             <button
               onClick={() => handleOpenTeleconnections()}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 text-xs font-medium border border-slate-700 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 text-xs font-medium border border-slate-700 transition-colors cursor-pointer"
             >
               <Globe2 className="w-3.5 h-3.5 text-red-400" />
               <span>Global Impacts Map</span>
@@ -126,6 +218,15 @@ export default function App() {
               <Share2 className="w-3.5 h-3.5 text-cyan-400" />
               <span>Share Scenario</span>
             </button>
+
+            <button
+              onClick={() => setShowExportPdf(true)}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-blue-600/25 hover:bg-blue-600/35 text-blue-300 text-xs font-semibold border border-blue-500/50 transition-all shadow-[0_0_12px_rgba(59,130,246,0.25)] cursor-pointer hover:scale-105"
+              title="Export formatted PDF scientific summary report for professional use"
+            >
+              <FileDown className="w-3.5 h-3.5 text-blue-400" />
+              <span>Export PDF Report</span>
+            </button>
           </div>
 
           {/* Main Title */}
@@ -144,8 +245,13 @@ export default function App() {
       {/* Main Content Area */}
       <main className="max-w-7xl mx-auto px-4 py-12 space-y-20 relative z-10">
         {/* Interactive Simulation Section */}
-        <section id="simulation-section" aria-label="Interactive Diagram of a Kelvin Wave" className="space-y-6">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <section id="simulation-section" aria-label="Interactive Diagram of a Kelvin Wave" className="space-y-6 relative">
+          {/* Subtle ocean particulate drift adding visual depth to the Anatomy of the Wave section */}
+          <div className="absolute -top-8 -left-4 -right-4 h-72 overflow-hidden pointer-events-none rounded-3xl opacity-50 z-0">
+            <OceanParticulateBackground particleCount={35} />
+          </div>
+
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 relative z-10">
             <div>
               <div className="flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-1">
                 <Compass className="w-4 h-4 text-cyan-400" />
@@ -213,31 +319,42 @@ export default function App() {
           {/* Real-Time Kelvin Wave Hydrodynamic Stats & Telemetry */}
           <KelvinRealtimeStats progress={progress} isPlaying={isPlaying} />
 
-          {/* Active Simulation View */}
-          {viewMode === 'cross-section' && (
-            <WaveCanvas
-              progress={progress}
-              setProgress={setProgress}
+          {/* Active Simulation View with Interactive Historical Timeline Overlay */}
+          <div className="space-y-4">
+            {viewMode === 'cross-section' && (
+              <WaveCanvas
+                progress={progress}
+                setProgress={setProgress}
+                isPlaying={isPlaying}
+                setIsPlaying={setIsPlaying}
+                playbackSpeed={playbackSpeed}
+                setPlaybackSpeed={setPlaybackSpeed}
+                onSelectBuoy={(buoy) => setSelectedBuoy(buoy)}
+              />
+            )}
+
+            {viewMode === 'satellite-ssh' && <SshSatelliteMap progress={progress} />}
+
+            {viewMode === 'comparison' && <ThermoclineComparison />}
+
+            {viewMode === 'north-america' && (
+              <NorthAmericanTrajectoryMap
+                onSyncSimulationProgress={(prog) => {
+                  setProgress(prog);
+                  setIsPlaying(false);
+                }}
+              />
+            )}
+
+            {/* Interactive Timeline Slider Component Overlaying the bottom of the main visualization section */}
+            <HistoricalTimelineOverlay
+              currentProgress={progress}
+              onProgressChange={handleProgressChange}
               isPlaying={isPlaying}
-              setIsPlaying={setIsPlaying}
-              playbackSpeed={playbackSpeed}
-              setPlaybackSpeed={setPlaybackSpeed}
-              onSelectBuoy={(buoy) => setSelectedBuoy(buoy)}
+              onTogglePlay={handleTogglePlay}
+              onPauseSimulation={handlePauseSimulation}
             />
-          )}
-
-          {viewMode === 'satellite-ssh' && <SshSatelliteMap progress={progress} />}
-
-          {viewMode === 'comparison' && <ThermoclineComparison />}
-
-          {viewMode === 'north-america' && (
-            <NorthAmericanTrajectoryMap
-              onSyncSimulationProgress={(prog) => {
-                setProgress(prog);
-                setIsPlaying(false);
-              }}
-            />
-          )}
+          </div>
         </section>
 
         {/* The 2026 Reality: By The Numbers */}
@@ -283,25 +400,86 @@ export default function App() {
         }}
       />
 
+      <ExportPdfModal
+        isOpen={showExportPdf}
+        onClose={() => setShowExportPdf(false)}
+        currentProgress={progress}
+        currentViewMode={viewMode}
+      />
+
       {/* Footer */}
-      <footer className="border-t border-slate-800/80 mt-20 py-10 bg-slate-950/60 text-slate-400 text-xs">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
-          <div className="space-y-1">
-            <p className="font-semibold text-slate-300">
-              Infographic based on NOAA and CPC ENSO Diagnostic Data - October 2026.
-            </p>
-            <p className="text-slate-500">
-              Data sources: NOAA Pacific Marine Environmental Laboratory (PMEL) TAO/TRITON Array, Copernicus Sentinel-6
-              Michael Freilich Radar Altimetry, and Argo Float Global Profiling Network.
-            </p>
+      <footer className="border-t border-slate-800/80 mt-24 py-14 bg-slate-950/95 text-slate-400 text-xs">
+        <div className="max-w-7xl mx-auto px-4 space-y-10">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-slate-800/80 text-center md:text-left">
+            <a
+              href="https://techandtonic.tech"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col sm:flex-row items-center gap-4 group cursor-pointer"
+              title="Visit Tech & Tonic at techandtonic.tech"
+            >
+              <TechAndTonicLogo variant="full" size="md" lightText={true} />
+              <div className="space-y-1">
+                <div className="flex items-center justify-center md:justify-start gap-2">
+                  <span className="text-sm font-bold text-white group-hover:text-emerald-300 transition-colors">
+                    Tech &amp; Tonic
+                  </span>
+                  <span className="text-[11px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/40">
+                    techandtonic.tech
+                  </span>
+                </div>
+                <p className="text-slate-400 text-xs max-w-md leading-relaxed">
+                  Computational earth observation, planetary hydrodynamics, and interactive science engineering.
+                </p>
+              </div>
+            </a>
+
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <a
+                href="https://techandtonic.tech"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-xs transition-all shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:scale-105 cursor-pointer"
+              >
+                <span>Visit techandtonic.tech</span>
+                <ExternalLink className="w-3.5 h-3.5 stroke-[2.5]" />
+              </a>
+
+              <a
+                href="https://github.com/techandtonic/pacific-kelvin-wave-2026"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-medium text-xs border border-slate-700 transition-colors cursor-pointer"
+              >
+                <span>GitHub Repository</span>
+                <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+              </a>
+            </div>
           </div>
 
-          <div className="flex items-center gap-4 text-[11px] font-mono text-slate-500">
-            <span className="flex items-center gap-1 text-emerald-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-              Buoy Network Online (68/70 active)
-            </span>
-            <span>Version: 2026.10-ENSO</span>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left text-slate-500 text-[11px]">
+            <div>
+              <p className="text-slate-400 font-medium">
+                Infographic based on NOAA PMEL TAO/TRITON Moored Array, Copernicus Sentinel-6 Radar Altimetry, and CPC ENSO Diagnostic Data.
+              </p>
+              <p className="text-slate-500 mt-0.5">
+                © {new Date().getFullYear()} Tech &amp; Tonic. All models, simulation physics, and telemetry data published under open educational license.
+              </p>
+            </div>
+            <div className="flex items-center gap-4 font-mono text-[11px]">
+              <span className="flex items-center gap-1.5 text-emerald-400">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                TAO Network Online (68/70 active)
+              </span>
+              <a
+                href="https://techandtonic.tech"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-emerald-400 hover:underline"
+              >
+                techandtonic.tech
+              </a>
+            </div>
           </div>
         </div>
       </footer>
