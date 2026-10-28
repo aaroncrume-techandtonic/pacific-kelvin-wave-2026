@@ -22,6 +22,9 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 
+const NOAA_EQUATORIAL_HEAT_CONTENT_PAGE = 'https://www.cpc.ncep.noaa.gov/products/intraseasonal/heat_tlon.shtml';
+const NOAA_EQUATORIAL_HEAT_CONTENT_IMAGE = 'https://www.cpc.ncep.noaa.gov/products/intraseasonal/tlon_heat.gif';
+
 interface NorthAmericanTrajectoryMapProps {
   onSyncSimulationProgress?: (progress: number) => void;
 }
@@ -32,11 +35,13 @@ export const NorthAmericanTrajectoryMap: React.FC<NorthAmericanTrajectoryMapProp
   // Days from WWB initiation: Day 65 (Equatorial landfall) to Day 120 (Alaska)
   // Default to Day 90 (San Diego Arrival / January King Tides Peak)
   const [coastalDay, setCoastalDay] = useState<number>(90);
-  const [isPlaying, setIsPlaying] = useState<boolean>(true);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
   // Speed multiplier: 0.2 (Ultra slow), 0.5 (Slow - default), 1.0 (Normal)
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(0.5);
   const [selectedStation, setSelectedStation] = useState<CoastalStation>(COASTAL_STATIONS[3]); // San Diego
   const [hoveredStation, setHoveredStation] = useState<CoastalStation | null>(null);
+  const [heatContentChartRefresh, setHeatContentChartRefresh] = useState(() => Date.now());
+  const [heatContentChartFailed, setHeatContentChartFailed] = useState(false);
 
   // Layer toggles
   const [showAtmosphericRivers, setShowAtmosphericRivers] = useState<boolean>(true);
@@ -74,6 +79,14 @@ export const NorthAmericanTrajectoryMap: React.FC<NorthAmericanTrajectoryMapProp
 
     return () => cancelAnimationFrame(animId);
   }, [isPlaying, playbackSpeed]);
+
+  useEffect(() => {
+    const refreshInterval = window.setInterval(() => {
+      setHeatContentChartRefresh(Date.now());
+    }, 15 * 60 * 1000);
+
+    return () => window.clearInterval(refreshInterval);
+  }, []);
 
   // Convert coastalDay to date
   const baseDate = new Date('2026-10-01T00:00:00');
@@ -135,6 +148,72 @@ export const NorthAmericanTrajectoryMap: React.FC<NorthAmericanTrajectoryMapProp
             hazard zones are illustrative—not observed data, NOAA predictions, or local hazard guidance.
           </p>
         </div>
+
+        <section className="rounded-2xl border border-cyan-800/70 bg-slate-950/70 p-4 md:p-5" aria-labelledby="observed-heat-content-title">
+          <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
+            <div>
+              <div className="text-[11px] font-bold uppercase tracking-wider text-cyan-300">Current NOAA observation</div>
+              <h4 id="observed-heat-content-title" className="text-lg font-bold text-white mt-1">
+                Equatorial Pacific Heat-Content Anomalies
+              </h4>
+              <p className="text-sm text-slate-300 mt-1 max-w-3xl">
+                NOAA CPC’s latest pentad time-longitude plot shows where upper-ocean heat anomalies are observed along
+                the equator. Read the newest date at the bottom of the chart; this is basin-scale context, not a
+                uniquely tracked wave crest or a North American coastal arrival.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setHeatContentChartRefresh(Date.now())}
+              className="shrink-0 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs font-semibold text-slate-200 hover:border-cyan-500 hover:text-white transition-colors"
+              aria-label="Refresh the NOAA heat-content chart"
+            >
+              Refresh NOAA chart
+            </button>
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(240px,0.8fr)] lg:items-center">
+            <a
+              href={NOAA_EQUATORIAL_HEAT_CONTENT_PAGE}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block rounded-xl border border-slate-800 bg-white p-2"
+              aria-label="Open NOAA CPC equatorial upper-ocean heat-content chart"
+            >
+              <img
+                src={`${NOAA_EQUATORIAL_HEAT_CONTENT_IMAGE}?refresh=${heatContentChartRefresh}`}
+                alt="NOAA CPC time-longitude plot of equatorial upper-ocean heat-content anomalies from 130 degrees east to 80 degrees west, with the newest pentad at the bottom."
+                className="mx-auto max-h-[560px] w-full object-contain"
+                onLoad={() => setHeatContentChartFailed(false)}
+                onError={() => setHeatContentChartFailed(true)}
+              />
+            </a>
+            <div className="space-y-3 text-sm text-slate-300">
+              <p>
+                The chart tracks 0–300 m average heat-content anomalies between 5°S and 5°N. Its longitude axis shows
+                where the observed signal lies across the equatorial Pacific; the plotted dates show its recent
+                evolution.
+              </p>
+              <p>
+                NOAA does not publish an exact Kelvin-wave crest position along the North American coast. The coastal
+                animation below remains an illustrative scenario, separate from this live observation.
+              </p>
+              {heatContentChartFailed && (
+                <p role="alert" className="text-amber-300">
+                  The NOAA chart could not be loaded. Open the NOAA source to view the latest plot.
+                </p>
+              )}
+              <a
+                href={NOAA_EQUATORIAL_HEAT_CONTENT_PAGE}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex font-semibold text-cyan-300 hover:text-cyan-200 underline underline-offset-4"
+              >
+                Open NOAA CPC heat-content analysis
+              </a>
+            </div>
+          </div>
+        </section>
 
         {/* Master Control Deck: Play/Pause, Slower Speeds & Stepping */}
         <div className="flex flex-wrap items-center gap-2 self-start lg:self-auto bg-slate-950/80 p-2 rounded-2xl border border-slate-800 shadow-lg">
