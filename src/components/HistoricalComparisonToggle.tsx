@@ -85,14 +85,14 @@ export const HistoricalComparisonToggle: React.FC = () => {
         <div>
           <div className="flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-1">
             <Layers className="w-4 h-4 text-cyan-400" />
-            Historical Dataset Comparison Toggle
+            Illustrative Model Comparison
           </div>
           <h4 className="text-xl font-extrabold text-white">
-            2026 Kelvin Wave vs. 1997 & 2015 "Super El Niño" Benchmarks
+            2026 Scenario vs. 1997 & 2015 Reference Scenarios
           </h4>
           <p className="text-xs text-slate-400 mt-0.5">
-            Evaluate subsurface thermocline depression and thermal heat content across the legendary 1997, 2015, and
-            current 2026 events.
+            Explore conceptual thermocline and temperature patterns. The displayed curves are illustrative and are
+            not NOAA observational transects.
           </p>
         </div>
 
@@ -107,7 +107,7 @@ export const HistoricalComparisonToggle: React.FC = () => {
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-red-400"></span>
-            <span>2026 (Live)</span>
+            <span>2026 Scenario</span>
           </button>
 
           <button
@@ -190,7 +190,7 @@ export const HistoricalComparisonToggle: React.FC = () => {
         <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono">
           {(selectedDataset === '2026' || selectedDataset === 'overlay') && (
             <span className="flex items-center gap-1.5 text-red-400 font-bold">
-              <span className="w-2.5 h-0.5 bg-red-500"></span> 2026 Current (+10.4°C Peak)
+            <span className="w-2.5 h-0.5 bg-red-500"></span> 2026 Illustrative Scenario
             </span>
           )}
           {(selectedDataset === '1997' || selectedDataset === 'overlay') && (
@@ -298,7 +298,7 @@ export const HistoricalComparisonToggle: React.FC = () => {
               />
             )}
 
-            {/* 2026 Live Current Path */}
+            {/* 2026 Illustrative Scenario Path */}
             {(selectedDataset === '2026' || selectedDataset === 'overlay') && (
               <path
                 d={generatePath(dataset2026.transectProfile, activeMetric)}
@@ -338,7 +338,7 @@ export const HistoricalComparisonToggle: React.FC = () => {
             </div>
             <div className="space-y-1 text-[11px] font-mono">
               <div className="flex justify-between gap-4 text-red-400 font-bold">
-                <span>2026 Observed:</span>
+                <span>2026 Scenario:</span>
                 <span>
                   {activeMetric === 'thermocline'
                     ? `${dataset2026.transectProfile[hoveredPointIndex].thermoclineDepthM}m`
@@ -382,7 +382,7 @@ export const HistoricalComparisonToggle: React.FC = () => {
 
       {/* Side-by-Side Metric Comparison Table */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Card 1: 2026 Live Event */}
+        {/* Card 1: 2026 Illustrative Scenario */}
         <div
           className={`p-4 rounded-xl border transition-all ${
             selectedDataset === '2026' || selectedDataset === 'overlay'
@@ -393,33 +393,33 @@ export const HistoricalComparisonToggle: React.FC = () => {
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-mono font-bold text-red-400 uppercase tracking-wider flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-red-400 animate-ping"></span>
-              2026–2027 Live
+              2026–2027 Scenario
             </span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-red-950 text-red-300 border border-red-500/30">
-              Current
+              Model
             </span>
           </div>
           <h5 className="text-sm font-bold text-white mb-2">{dataset2026.title}</h5>
 
           <div className="space-y-1.5 text-xs font-mono">
             <div className="flex justify-between py-1 border-b border-slate-800/80">
-              <span className="text-slate-400">Peak Niño 3.4 SST:</span>
+              <span className="text-slate-400">Scenario Niño 3.4 SST:</span>
               <span className="text-red-400 font-bold">+{dataset2026.nino34Anomaly}°C</span>
             </div>
             <div className="flex justify-between py-1 border-b border-slate-800/80">
-              <span className="text-slate-400">Max Subsurface Core:</span>
-              <span className="text-red-400 font-bold">+{dataset2026.peakSubsurfaceAnomaly}°C (Record)</span>
+              <span className="text-slate-400">Scenario Subsurface Core:</span>
+              <span className="text-red-400 font-bold">+{dataset2026.peakSubsurfaceAnomaly}°C</span>
             </div>
             <div className="flex justify-between py-1 border-b border-slate-800/80">
-              <span className="text-slate-400">Thermocline Downwelling:</span>
+              <span className="text-slate-400">Scenario Thermocline Change:</span>
               <span className="text-white">+{dataset2026.thermoclineMaxDepression}m</span>
             </div>
             <div className="flex justify-between py-1 border-b border-slate-800/80">
-              <span className="text-slate-400">Southern Oscillation (SOI):</span>
+              <span className="text-slate-400">Scenario SOI:</span>
               <span className="text-cyan-300">{dataset2026.soiIndex}</span>
             </div>
             <div className="flex justify-between py-1">
-              <span className="text-slate-400">Total Basin Energy:</span>
+              <span className="text-slate-400">Scenario Basin Energy:</span>
               <span className="text-amber-300">{dataset2026.totalEnergyZJ} ZJ</span>
             </div>
           </div>

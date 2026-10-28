@@ -125,15 +125,14 @@ export const NorthAmericanTrajectoryMap: React.FC<NorthAmericanTrajectoryMapProp
         <div>
           <div className="flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-1">
             <Waves className="w-4 h-4 text-cyan-400" />
-            Poleward Coastal Kelvin Wave (CKW) Trajectory & High-Tide Surge
+            Illustrative Coastal Scenario
           </div>
           <h3 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
-            North American West Coast Trajectory Map
+            North American West Coast Scenario Map
           </h3>
           <p className="text-sm text-slate-300 max-w-2xl mt-1 leading-relaxed">
-            Upon striking the Americas at 80°W, the equatorial Kelvin wave bifurcates into a boundary-trapped coastal
-            Kelvin wave. Trapped against the continental slope by Coriolis acceleration, it sweeps north along California,
-            Oregon, and Washington, elevating total sea heights by 6–12 inches during winter King Tides.
+            This schematic explores one possible coastal Kelvin-wave pathway. Its arrival dates, water levels, and
+            hazard zones are illustrative—not observed data, NOAA predictions, or local hazard guidance.
           </p>
         </div>
 
@@ -217,7 +216,7 @@ export const NorthAmericanTrajectoryMap: React.FC<NorthAmericanTrajectoryMapProp
           </div>
 
           <div className="flex items-center gap-2 font-mono text-xs">
-            <span className="text-slate-400">Current Wave Front:</span>
+            <span className="text-slate-400">Simulated Wave Front:</span>
             <span className="px-2.5 py-1 rounded-lg bg-blue-950/80 text-white border border-blue-500/40 font-bold flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-red-400"></span>
               ~{currentLatitude.toFixed(1)}°N ({activeStation.name.split(' (')[0]})
@@ -294,7 +293,7 @@ export const NorthAmericanTrajectoryMap: React.FC<NorthAmericanTrajectoryMapProp
             }`}
           >
             <ShieldAlert className="w-3.5 h-3.5 text-red-400" />
-            <span>King Tides High Hazard Zones</span>
+            <span>Illustrative High-Tide Scenario Zones</span>
           </button>
 
           <button
@@ -971,7 +970,7 @@ export const NorthAmericanTrajectoryMap: React.FC<NorthAmericanTrajectoryMapProp
               <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800">
                 <div className="flex items-center gap-1.5 text-slate-400 mb-1">
                   <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Projected Arrival</span>
+                  <span>Scenario Timing</span>
                 </div>
                 <div className="text-sm font-bold text-amber-300 font-mono">{selectedStation.estArrivalDate}</div>
                 <div className="text-[10px] text-slate-500 mt-0.5">Day +{selectedStation.estArrivalDay} post-WWB</div>

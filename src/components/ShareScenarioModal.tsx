@@ -145,18 +145,18 @@ export const ShareScenarioModal: React.FC<ShareScenarioModalProps> = ({
       return 'Stage 2: Mid-Pacific Equatorial Downwelling Pulse';
     }
     if (activeProgress < 0.8) {
-      return 'Stage 3: Peak Downwelling Core (+10.4°C Anomaly at 140°W)';
+      return 'Stage 3: Illustrative Downwelling Core';
     }
     return 'Stage 4: Eastern Basin Surfacing & Upwelling Collapse';
   };
 
   const scenarioTitle = getScenarioLabel();
-  const shareText = `Check out this Planetary Kelvin Wave scenario: "${scenarioTitle}" with live NOAA 2026 oceanographic telemetry!`;
+  const shareText = `Explore this illustrative Planetary Kelvin Wave scenario: "${scenarioTitle}".`;
 
   // Social sharing links
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
   const emailUrl = `mailto:?subject=${encodeURIComponent(`Planetary Kelvin Wave Scenario: ${scenarioTitle}`)}&body=${encodeURIComponent(
-    `Explore this real-time oceanographic simulation scenario of the 2026 Super El Niño Kelvin Wave:\n\nScenario: ${scenarioTitle}\nView Mode: ${activeView}\n\nDirect Link to Simulation:\n${shareUrl}\n\nFeatures 2026 TAO buoy mooring CTD data, thermocline downwelling profiles, and West Coast sea level surge predictions.`
+    `Explore this educational, illustrative Kelvin Wave simulation:\n\nScenario: ${scenarioTitle}\nView Mode: ${activeView}\n\nDirect Link to Simulation:\n${shareUrl}\n\nModel outputs are not NOAA measurements or official forecasts. See the page for the NOAA CPC ENSO source.`
   )}`;
   const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
   const redditUrl = `https://reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(`Planetary Kelvin Wave Simulation: ${scenarioTitle}`)}`;

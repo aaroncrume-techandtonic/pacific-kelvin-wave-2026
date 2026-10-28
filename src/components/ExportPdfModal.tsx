@@ -86,14 +86,14 @@ export const ExportPdfModal: React.FC<ExportPdfModalProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-xl font-bold text-white">
-                  Export Scientific Summary PDF Report
+                  Export NOAA Update & Scenario PDF
                 </h3>
                 <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-500/30">
                   Tech &amp; Tonic
                 </span>
               </div>
               <p className="text-xs text-slate-400">
-                Generate a publication-grade PDF report published by Tech &amp; Tonic (<a href="https://techandtonic.tech" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline">techandtonic.tech</a>).
+                Create an educational report that separates NOAA observations from illustrative model outputs (<a href="https://techandtonic.tech" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline">techandtonic.tech</a>).
               </p>
             </div>
           </div>
@@ -153,8 +153,8 @@ export const ExportPdfModal: React.FC<ExportPdfModalProps> = ({
                 className="mt-0.5 accent-cyan-400"
               />
               <div className="text-xs">
-                <span className="font-bold text-white block">TAO Buoy Array</span>
-                <span className="text-[11px] text-slate-400">Mooring CTD temperature & wind matrix</span>
+                <span className="font-bold text-white block">Illustrative Model Waypoints</span>
+                <span className="text-[11px] text-slate-400">Simulated profiles, not measured CTD data</span>
               </div>
             </label>
 
@@ -166,8 +166,8 @@ export const ExportPdfModal: React.FC<ExportPdfModalProps> = ({
                 className="mt-0.5 accent-cyan-400"
               />
               <div className="text-xs">
-                <span className="font-bold text-white block">West Coast Surge</span>
-                <span className="text-[11px] text-slate-400">CKW timeline & King Tides hazard data</span>
+                <span className="font-bold text-white block">Coastal Scenario</span>
+                <span className="text-[11px] text-slate-400">Illustrative timeline, not a hazard forecast</span>
               </div>
             </label>
 
@@ -189,7 +189,7 @@ export const ExportPdfModal: React.FC<ExportPdfModalProps> = ({
         {/* Optional Professional / Operational Metadata */}
         <div className="space-y-3 pt-1 border-t border-slate-800/80">
           <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider block">
-            Analyst & Operational Metadata (Optional)
+            Scenario Attribution (Optional)
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1">
@@ -224,11 +224,11 @@ export const ExportPdfModal: React.FC<ExportPdfModalProps> = ({
           <div className="space-y-1">
             <span className="text-[11px] text-slate-400 flex items-center gap-1">
               <FileText className="w-3 h-3 text-cyan-400" />
-              Briefing Notes / Operational Observations
+              Scenario Notes
             </span>
             <textarea
               rows={2}
-              placeholder="e.g. Wavefront downwelling core at 140°W confirms locked-in Super El Niño boundary reflection by mid-December."
+              placeholder="Describe the scenario assumptions; do not present model output as an observation or forecast."
               value={customNotes}
               onChange={(e) => setCustomNotes(e.target.value)}
               className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500 transition-colors resize-none"
@@ -240,7 +240,7 @@ export const ExportPdfModal: React.FC<ExportPdfModalProps> = ({
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-800">
           <div className="text-[11px] text-slate-400 flex items-center gap-1.5">
             <Info className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-            <span>NOAA PMEL &amp; Copernicus data citations · Published by <a href="https://techandtonic.tech" target="_blank" rel="noopener noreferrer" className="text-emerald-400 font-mono hover:underline">techandtonic.tech</a></span>
+            <span>Simulation output; consult the linked NOAA CPC bulletin for observations and outlook · <a href="https://techandtonic.tech" target="_blank" rel="noopener noreferrer" className="text-emerald-400 font-mono hover:underline">techandtonic.tech</a></span>
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">

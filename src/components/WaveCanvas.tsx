@@ -452,7 +452,7 @@ export const WaveCanvas: React.FC<WaveCanvasProps> = ({
       }
     }
 
-    // 8. TAO/TRITON Buoy Stations Markers
+    // 8. Illustrative model waypoint markers
     if (showBuoys) {
       BUOY_STATIONS.forEach((buoy) => {
         // Map longitude to x position
@@ -847,10 +847,10 @@ export const WaveCanvas: React.FC<WaveCanvasProps> = ({
                 ? 'bg-red-950/70 border-red-500/50 text-red-300'
                 : 'bg-slate-800/50 border-slate-700 text-slate-500'
             }`}
-            title="Toggle TAO mooring buoys"
+            title="Toggle illustrative model waypoints"
           >
             <Navigation className="w-3 h-3" />
-            <span className="hidden md:inline">TAO Buoys</span>
+            <span className="hidden md:inline">Model Points</span>
           </button>
 
           <button
@@ -1098,7 +1098,7 @@ export const WaveCanvas: React.FC<WaveCanvasProps> = ({
           );
         })}
 
-        {/* Live Hover Inspection Tooltip */}
+        {/* Model Hover Inspection Tooltip */}
         {hoverInfo && !isAnnotating && (
           <div
             className="absolute pointer-events-none z-30 transform -translate-x-1/2 -translate-y-full mb-3 bg-slate-950/95 border border-cyan-500/60 rounded-xl p-3 shadow-2xl backdrop-blur-md text-xs min-w-[210px]"
@@ -1135,7 +1135,7 @@ export const WaveCanvas: React.FC<WaveCanvasProps> = ({
               </div>
             </div>
             <div className="mt-2 pt-1 border-t border-slate-800/80 text-[10px] text-slate-500 text-center">
-              Click anywhere to inspect closest TAO Buoy
+              Click anywhere to inspect the nearest illustrative model point
             </div>
           </div>
         )}
@@ -1145,9 +1145,9 @@ export const WaveCanvas: React.FC<WaveCanvasProps> = ({
           <div className="flex items-center justify-between mb-1">
             <span className="font-bold text-white uppercase tracking-wider text-[11px] flex items-center gap-1.5">
               <Layers className="w-3.5 h-3.5 text-cyan-400" />
-              Scientific Transect Legend
+              Illustrative Model Legend
             </span>
-            <span className="text-[10px] text-cyan-400 font-mono">2026/27 Live</span>
+            <span className="text-[10px] text-cyan-400 font-mono">Illustrative Model</span>
           </div>
 
           {/* Dynamic Thermal Anomaly Colormap (Shown when Heatmap Overlay is active) */}
@@ -1159,7 +1159,7 @@ export const WaveCanvas: React.FC<WaveCanvasProps> = ({
                   Thermal Anomaly Heatmap (ΔT)
                 </span>
                 <span className="text-white font-bold bg-red-950 px-1.5 py-0.2 rounded border border-red-500/50">
-                  Peak: +10.4°C
+                  Scenario value
                 </span>
               </div>
               {/* Continuous Colormap Bar */}
@@ -1185,7 +1185,7 @@ export const WaveCanvas: React.FC<WaveCanvasProps> = ({
           </div>
           <div className="flex items-center gap-2.5">
             <div className="w-3.5 h-3.5 bg-gradient-to-r from-orange-500 to-red-600 rounded shadow-[0_0_8px_rgba(239,68,68,0.7)] shrink-0"></div>
-            <span className="text-red-300 font-medium">Kelvin Wave Core (&gt;10°C Downwelling)</span>
+            <span className="text-red-300 font-medium">Illustrative warm subsurface core</span>
           </div>
           <div className="flex items-center gap-2.5">
             <div className="w-4 border-t-2 border-dashed border-white shrink-0"></div>
@@ -1193,7 +1193,7 @@ export const WaveCanvas: React.FC<WaveCanvasProps> = ({
           </div>
           <div className="flex items-center gap-2.5">
             <div className="w-3 h-3 rounded-full bg-red-500 border border-white shrink-0"></div>
-            <span className="text-slate-400">TAO/TRITON Moored Array Station</span>
+            <span className="text-slate-400">Schematic model waypoint (not a measured station)</span>
           </div>
         </div>
       </div>

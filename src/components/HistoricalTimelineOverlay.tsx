@@ -231,7 +231,7 @@ export const HistoricalTimelineOverlay: React.FC<HistoricalTimelineOverlayProps>
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-[11px] font-mono text-cyan-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
                 <Clock className="w-3 h-3 text-cyan-400" />
-                Historical 2026/2027 Event Timeline
+                Illustrative 2026/2027 Scenario Timeline
               </span>
               <span
                 className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${
@@ -244,11 +244,6 @@ export const HistoricalTimelineOverlay: React.FC<HistoricalTimelineOverlayProps>
               >
                 {activeMonth.badgeLabel}
               </span>
-              {nearestIdx === 2 && (
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-500/40">
-                  Live Observation
-                </span>
-              )}
             </div>
             <div className="text-base md:text-lg font-black text-white flex flex-wrap items-center gap-2 mt-0.5">
               <span>{activeMonth.fullDate}:</span>
@@ -257,6 +252,10 @@ export const HistoricalTimelineOverlay: React.FC<HistoricalTimelineOverlayProps>
               </span>
             </div>
           </div>
+        </div>
+
+        <div className="px-4 py-2.5 bg-amber-950/40 border-b border-amber-500/20 text-xs text-amber-100/90">
+          Scenario only: dates and plotted quantities are illustrative, not historical observations or an NOAA forecast.
         </div>
 
         {/* Stepper, Playback & Mode Controls */}
@@ -422,7 +421,7 @@ export const HistoricalTimelineOverlay: React.FC<HistoricalTimelineOverlayProps>
         </div>
       </div>
 
-      {/* Expanded Live Telemetry & Scientific Data Shifts */}
+      {/* Expanded Scenario Metrics */}
       {isExpanded && (
         <div className="p-4 md:p-5 bg-slate-950/95 border-t border-slate-800/80 space-y-4 animate-in fade-in duration-200">
           {/* Scientific Metric Cards */}
@@ -434,7 +433,7 @@ export const HistoricalTimelineOverlay: React.FC<HistoricalTimelineOverlayProps>
                   <Thermometer className="w-3.5 h-3.5 text-red-400" />
                   Subsurface Temp Anomaly
                 </span>
-                <span className="text-[10px] font-mono text-red-400 font-bold">140m depth</span>
+                <span className="text-[10px] font-mono text-red-400 font-bold">Model value</span>
               </div>
               <div className="text-2xl font-black text-red-400 font-mono tracking-tight">
                 +{displaySubsurfaceTemp}°C
@@ -470,7 +469,7 @@ export const HistoricalTimelineOverlay: React.FC<HistoricalTimelineOverlayProps>
                   <ArrowUpRight className="w-3.5 h-3.5 text-blue-400" />
                   Altimetry Surge (SSHA)
                 </span>
-                <span className="text-[10px] font-mono text-blue-400 font-bold">Sentinel-6</span>
+                <span className="text-[10px] font-mono text-blue-400 font-bold">Scenario</span>
               </div>
               <div className="text-2xl font-black text-blue-300 font-mono tracking-tight">
                 +{displaySshaCm} cm
@@ -517,7 +516,7 @@ export const HistoricalTimelineOverlay: React.FC<HistoricalTimelineOverlayProps>
             </div>
 
             <div className="shrink-0 flex items-center gap-2 border-t md:border-t-0 md:border-l border-slate-800 pt-2 md:pt-0 md:pl-4">
-              <span className="text-[11px] font-mono text-slate-400">ENSO Status:</span>
+              <span className="text-[11px] font-mono text-slate-400">Scenario index:</span>
               <span
                 className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold ${
                   parseFloat(displayOni) >= 2.0
@@ -525,7 +524,7 @@ export const HistoricalTimelineOverlay: React.FC<HistoricalTimelineOverlayProps>
                     : 'bg-amber-950/80 text-amber-300 border border-amber-500/50'
                 }`}
               >
-                {parseFloat(displayOni) >= 2.0 ? 'Super El Niño (+2.0°C+)' : 'Strong El Niño'}
+                {parseFloat(displayOni) >= 2.0 ? 'At least +2.0°C' : 'Below +2.0°C'}
               </span>
             </div>
           </div>

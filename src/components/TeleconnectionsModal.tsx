@@ -26,9 +26,9 @@ export const TeleconnectionsModal: React.FC<TeleconnectionsModalProps> = ({
               <Globe2 className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-white">Global Teleconnections & Climate Impacts</h3>
+              <h3 className="text-lg font-bold text-white">Illustrative Teleconnection Scenarios</h3>
               <p className="text-xs text-slate-400">
-                How the 2026 Pacific Kelvin Wave alters weather systems across the globe
+                Hypothetical climate mechanisms; these are not NOAA forecasts or event-specific impact assessments.
               </p>
             </div>
           </div>

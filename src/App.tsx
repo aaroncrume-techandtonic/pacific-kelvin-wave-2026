@@ -175,11 +175,11 @@ export default function App() {
             </a>
           </div>
 
-          {/* Live Data Badge & Action Links */}
+          {/* NOAA Update Badge & Action Links */}
           <div className="flex flex-wrap items-center justify-center gap-3">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-900/50 border border-blue-500/40 text-blue-300 text-xs font-semibold tracking-wide uppercase shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-              <span className="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span>
-              Live Data: October 2026
+              <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+              NOAA CPC update: October 2026
             </div>
 
             <button
@@ -236,8 +236,8 @@ export default function App() {
 
           {/* Subtitle */}
           <p className="text-lg md:text-2xl text-slate-300/90 font-light max-w-3xl mx-auto leading-relaxed">
-            A massive, deep-ocean pulse of extreme warmth is traveling across the Pacific, serving as the powerful
-            engine behind the historic 2026/2027 Super El Niño.
+            Explore how equatorial Kelvin waves can redistribute heat across the Pacific. The interactive graphics
+            are illustrative simulations; the latest NOAA observations and outlook are identified separately below.
           </p>
         </div>
       </header>
@@ -255,12 +255,12 @@ export default function App() {
             <div>
               <div className="flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-1">
                 <Compass className="w-4 h-4 text-cyan-400" />
-                Real-Time Oceanographic Simulation
+                Illustrative Oceanographic Simulation
               </div>
               <h2 className="text-3xl md:text-4xl font-extrabold text-white">Anatomy of the Wave</h2>
               <p className="text-slate-400 max-w-2xl text-sm mt-1">
-                Watch how anomalous westerly winds push warm surface waters eastward, depressing the thermocline and
-                carrying extreme subsurface heat across the Pacific Ocean.
+                Explore how anomalous westerly winds can push warm surface waters eastward, depress the thermocline,
+                and carry subsurface heat across the Pacific Ocean.
               </p>
             </div>
 
@@ -316,7 +316,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* Real-Time Kelvin Wave Hydrodynamic Stats & Telemetry */}
+          {/* Illustrative Kelvin Wave Model Telemetry */}
           <KelvinRealtimeStats progress={progress} isPlaying={isPlaying} />
 
           {/* Active Simulation View with Interactive Historical Timeline Overlay */}
@@ -357,15 +357,14 @@ export default function App() {
           </div>
         </section>
 
-        {/* The 2026 Reality: By The Numbers */}
-        <MetricsSection onOpenTeleconnections={handleOpenTeleconnections} />
+        {/* Scientific context for the NOAA update */}
+        <MetricsSection />
 
         {/* The 4 Stages of Propagation */}
         <StagesSection progress={progress} onJumpToStage={handleJumpToStage} />
 
-        {/* Live Ocean & Atmospheric Diagnostics Panel with Forward-Projection Engine */}
+        {/* NOAA ENSO observations and illustrative scenario tools */}
         <EnsoDiagnostics
-          onSelectBuoy={(buoy) => setSelectedBuoy(buoy)}
           onSyncSimulation={(progressVal) => {
             setProgress(progressVal);
             setIsPlaying(false);
@@ -460,16 +459,16 @@ export default function App() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left text-slate-500 text-[11px]">
             <div>
               <p className="text-slate-400 font-medium">
-                Infographic based on NOAA PMEL TAO/TRITON Moored Array, Copernicus Sentinel-6 Radar Altimetry, and CPC ENSO Diagnostic Data.
+                NOAA observations and outlooks are linked in the page. Interactive wave, timeline, station-profile, and projection graphics are illustrative and are not live data.
               </p>
               <p className="text-slate-500 mt-0.5">
-                © {new Date().getFullYear()} Tech &amp; Tonic. All models, simulation physics, and telemetry data published under open educational license.
+                © {new Date().getFullYear()} Tech &amp; Tonic. Educational simulation; see NOAA CPC for current observations and forecasts.
               </p>
             </div>
             <div className="flex items-center gap-4 font-mono text-[11px]">
               <span className="flex items-center gap-1.5 text-emerald-400">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                TAO Network Online (68/70 active)
+                <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                NOAA source linked
               </span>
               <a
                 href="https://techandtonic.tech"

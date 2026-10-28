@@ -12,14 +12,14 @@ export interface WindScenario {
 export const WIND_SCENARIOS: WindScenario[] = [
   {
     id: '2026-super',
-    name: '2026 Current Super-Burst (Observed)',
-    historicalPeriod: 'October 2026',
+    name: '2026 Illustrative Wind-Burst Scenario',
+    historicalPeriod: 'Scenario input',
     windIntensityMs: 11.8,
     windStressTau: 0.24,
     phaseSpeedMs: 2.82, // ~243 km/day
     peakSubsurfaceAnomalyC: 10.4,
     description:
-      'Extreme twin cyclone WWB episode triggered by high-amplitude MJO phase 8-1 in Western Pacific warm pool.',
+      'Illustrative wind forcing for exploring the model; not an observed 2026 wind-burst event.',
   },
   {
     id: '1997-monster',

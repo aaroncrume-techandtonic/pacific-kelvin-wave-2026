@@ -1,5 +1,22 @@
 import { BuoyStation, StageInfo, TeleconnectionImpact } from '../types/kelvin';
 
+export const NOAA_CPC_ENSO_UPDATE = {
+  bulletin: 'October 2026',
+  observations: [
+    { region: 'Niño 3.4', anomalyC: 2.1 },
+    { region: 'Niño 3', anomalyC: 3.0 },
+    { region: 'Niño 1+2', anomalyC: 3.9 },
+  ],
+  easternPacificSstAnomalyC: 4.0,
+  easternPacificSubsurfaceTemperatureC: 10.0,
+  historicEventProbabilities: [
+    { period: 'September–November 2026', probability: 54 },
+    { period: 'October–December 2026', probability: 83 },
+    { period: 'November 2026–January 2027', probability: 70 },
+  ],
+  sourceUrl: 'https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml',
+} as const;
+
 export const BUOY_STATIONS: BuoyStation[] = [
   {
     id: 'tao-165e',

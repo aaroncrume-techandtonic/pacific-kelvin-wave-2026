@@ -1,6 +1,6 @@
 import jsPDF from 'jspdf';
 import { ViewMode, BuoyStation, CoastalStation } from '../types/kelvin';
-import { BUOY_STATIONS, STAGES_DATA, TELECONNECTIONS } from '../data/scientificData';
+import { BUOY_STATIONS, NOAA_CPC_ENSO_UPDATE, STAGES_DATA, TELECONNECTIONS } from '../data/scientificData';
 import { COASTAL_STATIONS } from '../data/coastalTrajectoryData';
 
 export interface PdfReportOptions {
@@ -57,7 +57,7 @@ export function generateKelvinPdfReport(options: PdfReportOptions): void {
     doc.setTextColor(148, 163, 184);
     const dateStr = new Date().toISOString().split('T')[0];
     doc.text(
-      `Tech & Tonic (techandtonic.tech) · NOAA PMEL / CPC ENSO Diagnostic Bulletin · Generated ${dateStr}`,
+      `Tech & Tonic (techandtonic.tech) · Educational simulation · Generated ${dateStr}`,
       margin,
       pageHeight - 8
     );
@@ -84,7 +84,7 @@ export function generateKelvinPdfReport(options: PdfReportOptions): void {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8.5);
   doc.setTextColor(6, 182, 212);
-  doc.text('TECH & TONIC · SCIENTIFIC SUMMARY REPORT · techandtonic.tech', margin + 7, y + 7);
+  doc.text('TECH & TONIC · NOAA UPDATE & MODEL SCENARIO · techandtonic.tech', margin + 7, y + 7);
 
   doc.setFontSize(16);
   doc.setTextColor(255, 255, 255);
@@ -94,7 +94,7 @@ export function generateKelvinPdfReport(options: PdfReportOptions): void {
   doc.setFontSize(9);
   doc.setTextColor(203, 213, 225);
   doc.text(
-    'Real-Time Oceanographic Telemetry, Downwelling Wavefront & Coastal Hazard Forecast (2026/27)',
+    'NOAA CPC ENSO observations and illustrative Kelvin-wave simulation (October 2026)',
     margin + 7,
     y + 22
   );
@@ -115,7 +115,7 @@ export function generateKelvinPdfReport(options: PdfReportOptions): void {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
   doc.setTextColor(15, 23, 42);
-  doc.text('1. EXECUTIVE STATE & HYDRODYNAMIC TELEMETRY', margin, y);
+  doc.text('1. NOAA CPC OBSERVATIONS (SEPTEMBER 2026)', margin, y);
   y += 5;
 
   // Compute scenario parameters
@@ -134,12 +134,12 @@ export function generateKelvinPdfReport(options: PdfReportOptions): void {
   const tileHeight = 18;
 
   const metrics = [
-    { label: 'Wave Core Subsurface Anomaly', value: '+10.4°C', sub: 'Depth: 140m @ 140°W' },
-    { label: 'Max Thermocline Downwelling', value: '+95 m', sub: '20°C Isotherm Depressed' },
-    { label: 'Sea Surface Height Anomaly', value: '+24.8 cm', sub: '+9.8 in Altimetry Peak' },
-    { label: 'Theoretical Phase Speed', value: '2.7 m/s', sub: '~233 km/day (Internal Gravity)' },
-    { label: 'Equatorial Rossby Radius', value: '245 km', sub: 'Boundary Trapping Width' },
-    { label: 'Oceanic Niño Index (ONI)', value: '+2.5°C', sub: 'Super El Niño Threshold (>2.0)' },
+    { label: 'Niño 3.4 SST anomaly', value: `+${NOAA_CPC_ENSO_UPDATE.observations[0].anomalyC.toFixed(1)}°C`, sub: 'NOAA CPC monthly index' },
+    { label: 'Niño 3 SST anomaly', value: `+${NOAA_CPC_ENSO_UPDATE.observations[1].anomalyC.toFixed(1)}°C`, sub: 'NOAA CPC monthly index' },
+    { label: 'Niño 1+2 SST anomaly', value: `+${NOAA_CPC_ENSO_UPDATE.observations[2].anomalyC.toFixed(1)}°C`, sub: 'NOAA CPC monthly index' },
+    { label: 'Eastern Pacific SST anomaly', value: `>+${NOAA_CPC_ENSO_UPDATE.easternPacificSstAnomalyC.toFixed(1)}°C`, sub: 'In portions of the region' },
+    { label: 'Eastern Pacific subsurface temperature', value: `>${NOAA_CPC_ENSO_UPDATE.easternPacificSubsurfaceTemperatureC.toFixed(1)}°C`, sub: 'At depth; not an anomaly' },
+    { label: 'Historic 3-month RONI chance', value: `${NOAA_CPC_ENSO_UPDATE.historicEventProbabilities[1].probability}%`, sub: 'Oct–Dec 2026; RONI ≥ +2.5°C' },
   ];
 
   metrics.forEach((m, idx) => {
@@ -176,12 +176,12 @@ export function generateKelvinPdfReport(options: PdfReportOptions): void {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8);
   doc.setTextColor(30, 41, 59);
-  doc.text(`Active Simulation Mode: ${options.currentViewMode.toUpperCase()}`, margin + 4, y + 5);
+  doc.text(`Illustrative Simulation Mode: ${options.currentViewMode.toUpperCase()}`, margin + 4, y + 5);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.5);
   doc.setTextColor(71, 85, 105);
   doc.text(
-    `Simulated Wavefront Location: ${progressLon} · Overall Basin Traversal: ${progPct}% complete`,
+    `Simulated location: ${progressLon} · Model traversal: ${progPct}% complete`,
     margin + 4,
     y + 9
   );
@@ -221,7 +221,7 @@ export function generateKelvinPdfReport(options: PdfReportOptions): void {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(11);
     doc.setTextColor(15, 23, 42);
-    doc.text('2. EQUATORIAL TAO/TRITON MOORING ARRAY TELEMETRY', margin, y);
+    doc.text('2. ILLUSTRATIVE MODEL WAYPOINT VALUES (NOT TAO OBSERVATIONS)', margin, y);
     y += 5;
 
     // Table Header
@@ -296,7 +296,7 @@ export function generateKelvinPdfReport(options: PdfReportOptions): void {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(11);
     doc.setTextColor(15, 23, 42);
-    doc.text('3. NORTH AMERICAN COASTAL KELVIN WAVE (CKW) & KING TIDES RISK', margin, y);
+    doc.text('3. ILLUSTRATIVE COASTAL SCENARIO (NOT A HAZARD FORECAST)', margin, y);
     y += 5;
 
     // Table Header
@@ -377,7 +377,7 @@ export function generateKelvinPdfReport(options: PdfReportOptions): void {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(11);
     doc.setTextColor(15, 23, 42);
-    doc.text('4. GLOBAL CLIMATE TELECONNECTIONS & RISK ASSESSMENT', margin, y);
+    doc.text('4. ILLUSTRATIVE CLIMATE SCENARIOS (NOT AN OFFICIAL RISK ASSESSMENT)', margin, y);
     y += 5;
 
     TELECONNECTIONS.forEach((tc) => {
@@ -418,19 +418,19 @@ export function generateKelvinPdfReport(options: PdfReportOptions): void {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(7.5);
   doc.setTextColor(51, 65, 85);
-  doc.text('Authoritative Oceanographic Grounding & Data Sources:', margin + 4, y + 4.5);
+  doc.text('NOAA source for the observations above:', margin + 4, y + 4.5);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7);
   doc.setTextColor(100, 116, 139);
   doc.text(
-    '1. NOAA PMEL Tropical Atmosphere Ocean (TAO) / TRITON Moored Buoy Network\n2. Copernicus Sentinel-6 Michael Freilich Radar Altimetry & Jason-3 Sea Surface Height\n3. NOAA CO-OPS National Water Level Observation Network (NWLON) & Argo Profiling Floats',
+    `NOAA Climate Prediction Center, ENSO Diagnostic Discussion (${NOAA_CPC_ENSO_UPDATE.bulletin}):\n${NOAA_CPC_ENSO_UPDATE.sourceUrl}\nAll other model and coastal values in this report are illustrative simulation outputs.`,
     margin + 4,
     y + 8.5
   );
 
   // Trigger download
   const sanitizedDate = new Date().toISOString().split('T')[0];
-  const filename = `NOAA_Kelvin_Wave_Scientific_Report_${sanitizedDate}.pdf`;
+  const filename = `Kelvin_Wave_NOAA_Update_and_Simulation_${sanitizedDate}.pdf`;
   doc.save(filename);
 }

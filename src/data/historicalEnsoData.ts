@@ -26,8 +26,8 @@ export interface HistoricalEnsoDataset {
 export const HISTORICAL_ENSO_DATASETS: Record<'2026' | '1997' | '2015', HistoricalEnsoDataset> = {
   '2026': {
     id: '2026',
-    title: '2026–2027 Super El Niño (Current Live Event)',
-    season: 'October 2026 – Present',
+    title: '2026–2027 Illustrative Scenario',
+    season: 'Scenario data; not a dated observation',
     nino34Anomaly: 2.5,
     peakSubsurfaceAnomaly: 10.4,
     heatContentAnomaly: 5.8,
@@ -37,8 +37,8 @@ export const HISTORICAL_ENSO_DATASETS: Record<'2026' | '1997' | '2015', Historic
     phaseSpeedMs: 2.82,
     totalEnergyZJ: 0.42,
     description:
-      'Unprecedented subsurface heat pulse initiated by dual tropical cyclones and active MJO phase 8-1. Displays the deepest thermocline depression ever recorded in the central Pacific.',
-    keyCharacteristic: 'Record subsurface thermal anomaly (>+10.4°C in top 200m) with rapid coupled basin amplification.',
+      'An educational scenario curve illustrating a possible equatorial Pacific warming pattern. Values are not NOAA observations or an official forecast.',
+    keyCharacteristic: 'Illustrative thermocline and temperature values; see the linked NOAA CPC bulletin for observed ENSO indices.',
     color: '#ef4444',
     borderColor: 'border-red-500',
     transectProfile: [

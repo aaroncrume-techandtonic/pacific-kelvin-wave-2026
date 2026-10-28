@@ -11,7 +11,7 @@ export const BuoyInspectorModal: React.FC<BuoyInspectorModalProps> = ({ buoy, on
   if (!buoy) return null;
 
   // Generate vertical temperature profile points (Depth 0m to 400m)
-  // For normal vs 2026 observed
+  // Generate schematic profile curves for the selected model point.
   const depths = [0, 25, 50, 75, 100, 150, 200, 250, 300, 350, 400];
   const profilePoints = depths.map((d) => {
     // Normal temp calculation
@@ -20,7 +20,7 @@ export const BuoyInspectorModal: React.FC<BuoyInspectorModalProps> = ({ buoy, on
       normTemp -= 4;
     }
 
-    // Observed 2026 temp with Kelvin wave downwelling
+    // Illustrative model temperature profile
     let obsTemp = buoy.sst - (d / 400) * 16;
     if (d > buoy.thermoclineDepth) {
       obsTemp -= 5;
@@ -62,7 +62,7 @@ export const BuoyInspectorModal: React.FC<BuoyInspectorModalProps> = ({ buoy, on
                   {buoy.longitude}
                 </span>
               </div>
-              <p className="text-xs text-slate-400">NOAA TAO/TRITON Moored Buoy Telemetry (0° Equator)</p>
+              <p className="text-xs text-slate-400">Illustrative model waypoint · not a measured TAO station</p>
             </div>
           </div>
 
@@ -76,14 +76,19 @@ export const BuoyInspectorModal: React.FC<BuoyInspectorModalProps> = ({ buoy, on
 
         {/* Content Body */}
         <div className="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
+          <div className="p-3.5 rounded-xl bg-amber-950/50 border border-amber-500/40 text-xs text-amber-100 leading-relaxed">
+            These values and the generated temperature profile are illustrative simulation outputs, not NOAA
+            observations or an actual CTD cast.
+          </div>
+
           {/* Status banner */}
           {buoy.status === 'critical' && (
             <div className="flex items-center gap-3 p-3.5 rounded-xl bg-red-950/50 border border-red-500/40 text-xs text-red-200">
               <AlertTriangle className="w-5 h-5 text-red-400 shrink-0" />
               <div>
-                <span className="font-bold text-red-300">Extreme Subsurface Heat Pulse Active: </span>
-                Thermocline downwelled by +{buoy.thermoclineDepth - buoy.normalThermoclineDepth}m below climatological
-                baseline.
+                <span className="font-bold text-red-300">Illustrative model state: </span>
+                The model thermocline is shown +{buoy.thermoclineDepth - buoy.normalThermoclineDepth}m below its
+                schematic baseline.
               </div>
             </div>
           )}
@@ -93,7 +98,7 @@ export const BuoyInspectorModal: React.FC<BuoyInspectorModalProps> = ({ buoy, on
             <div className="bg-slate-800/60 p-3 rounded-xl border border-slate-700/60">
               <div className="flex items-center gap-1.5 text-slate-400 mb-1">
                 <Thermometer className="w-3.5 h-3.5 text-rose-400" />
-                <span>Sea Surface Temp</span>
+                <span>Model SST</span>
               </div>
               <div className="text-lg font-bold text-white font-mono">{buoy.sst}°C</div>
               <div className="text-[11px] text-rose-400 font-semibold">
@@ -104,7 +109,7 @@ export const BuoyInspectorModal: React.FC<BuoyInspectorModalProps> = ({ buoy, on
             <div className="bg-slate-800/60 p-3 rounded-xl border border-slate-700/60">
               <div className="flex items-center gap-1.5 text-slate-400 mb-1">
                 <Waves className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Thermocline Depth</span>
+                <span>Model Thermocline</span>
               </div>
               <div className="text-lg font-bold text-white font-mono">{buoy.thermoclineDepth}m</div>
               <div className="text-[11px] text-cyan-400">Normal: {buoy.normalThermoclineDepth}m</div>
@@ -113,7 +118,7 @@ export const BuoyInspectorModal: React.FC<BuoyInspectorModalProps> = ({ buoy, on
             <div className="bg-slate-800/60 p-3 rounded-xl border border-slate-700/60">
               <div className="flex items-center gap-1.5 text-slate-400 mb-1">
                 <Activity className="w-3.5 h-3.5 text-amber-400" />
-                <span>Heat Anomaly (0-300m)</span>
+                <span>Model Heat Anomaly</span>
               </div>
               <div className="text-lg font-bold text-amber-300 font-mono">+{buoy.heatContentAnomaly}°C</div>
               <div className="text-[11px] text-amber-400/80">Massive thermal pool</div>
@@ -122,7 +127,7 @@ export const BuoyInspectorModal: React.FC<BuoyInspectorModalProps> = ({ buoy, on
             <div className="bg-slate-800/60 p-3 rounded-xl border border-slate-700/60">
               <div className="flex items-center gap-1.5 text-slate-400 mb-1">
                 <Wind className="w-3.5 h-3.5 text-blue-400" />
-                <span>Zonal Wind Stress</span>
+                <span>Model Zonal Wind</span>
               </div>
               <div className="text-lg font-bold text-white font-mono">
                 {buoy.zonalWind > 0 ? `+${buoy.zonalWind}` : buoy.zonalWind} m/s
@@ -136,13 +141,13 @@ export const BuoyInspectorModal: React.FC<BuoyInspectorModalProps> = ({ buoy, on
           {/* Depth vs Temperature Vertical Profile Chart */}
           <div className="bg-slate-950/80 p-4 rounded-xl border border-slate-800">
             <div className="flex items-center justify-between mb-3 text-xs">
-              <span className="font-bold text-white">Vertical CTD Temperature Profile (0 – 400m)</span>
+              <span className="font-bold text-white">Illustrative Temperature Profile (0 – 400m)</span>
               <div className="flex items-center gap-4 text-[11px]">
                 <span className="flex items-center gap-1 text-slate-400">
                   <span className="w-2.5 h-0.5 bg-slate-400"></span> Normal Mean
                 </span>
                 <span className="flex items-center gap-1 text-red-400 font-semibold">
-                  <span className="w-2.5 h-0.5 bg-red-500"></span> 2026 Observed
+                  <span className="w-2.5 h-0.5 bg-red-500"></span> Illustrative Model
                 </span>
               </div>
             </div>
@@ -179,7 +184,7 @@ export const BuoyInspectorModal: React.FC<BuoyInspectorModalProps> = ({ buoy, on
                   strokeDasharray="4 3"
                 />
 
-                {/* 2026 Observed temperature curve */}
+                {/* Illustrative model temperature curve */}
                 <path
                   d={profilePoints
                     .map((pt, i) => {

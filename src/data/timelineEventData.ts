@@ -1,6 +1,6 @@
 export interface MonthlyEventPoint {
   id: string;
-  monthIndex: number; // 0 to 7 (Aug 2026 to Mar 2027)
+  monthIndex: number; // 0 to 7 (illustrative scenario sequence)
   monthLabel: string;
   fullDate: string;
   eventPhase: string;
@@ -70,7 +70,7 @@ export const HISTORICAL_TIMELINE_MONTHS: MonthlyEventPoint[] = [
     monthIndex: 2,
     monthLabel: 'Oct 2026',
     fullDate: 'October 2026',
-    eventPhase: 'Central Basin Trans-Pacific Peak (Current State)',
+    eventPhase: 'Illustrative Central Basin Phase',
     progress: 0.48,
     coastalDay: 67,
     oni: 2.2,

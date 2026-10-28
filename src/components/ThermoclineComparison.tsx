@@ -10,7 +10,7 @@ export const ThermoclineComparison: React.FC = () => {
         <div>
           <h3 className="text-xl font-bold text-white flex items-center gap-2">
             <Sliders className="w-5 h-5 text-cyan-400" />
-            Basin Thermocline Structure: Normal vs. 2026 Super El Niño
+            Schematic Basin Thermocline: Normal vs. Illustrative Scenario
           </h3>
           <p className="text-sm text-slate-400 mt-1">
             Drag the interactive divider to compare the normal tilted Pacific thermocline against the flattened,
@@ -26,7 +26,7 @@ export const ThermoclineComparison: React.FC = () => {
           <ArrowRight className="w-3.5 h-3.5 text-slate-600" />
           <span className="flex items-center gap-1.5 text-red-400 font-bold">
             <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-            2026 Super El Niño
+            Illustrative Scenario
           </span>
         </div>
       </div>
@@ -84,7 +84,7 @@ export const ThermoclineComparison: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Side: 2026 Super El Niño (Clipped via clipPath) */}
+        {/* Right Side: Illustrative Scenario (Clipped via clipPath) */}
         <div
           className="absolute inset-0 flex flex-col justify-between p-4 pointer-events-none bg-slate-950/70"
           style={{ clipPath: `polygon(${splitPos}% 0, 100% 0, 100% 100%, ${splitPos}% 100%)` }}
@@ -95,7 +95,7 @@ export const ThermoclineComparison: React.FC = () => {
             </div>
             <div className="bg-red-950/90 border border-red-500/50 px-3 py-1.5 rounded-lg text-xs text-right">
               <span className="text-red-300 font-bold flex items-center justify-end gap-1">
-                <ShieldAlert className="w-3.5 h-3.5 text-red-400" /> 2026 Super El Niño
+                <ShieldAlert className="w-3.5 h-3.5 text-red-400" /> Illustrative Scenario
               </span>
               <div className="text-[11px] text-red-200/80 mt-0.5">Westerly Wind Bursts & Basin Collapse</div>
             </div>

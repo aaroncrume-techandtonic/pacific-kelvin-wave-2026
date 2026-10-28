@@ -94,14 +94,14 @@ export const ForwardProjection: React.FC<ForwardProjectionProps> = ({ onSyncSimu
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 text-xs font-semibold uppercase tracking-wider mb-2">
             <FastForward className="w-3.5 h-3.5 text-cyan-400" />
-            Predictive Hydrodynamic Model
+            Illustrative Scenario Model
           </div>
           <h3 className="text-2xl md:text-3xl font-extrabold text-white flex items-center gap-3">
-            Kelvin Wave Forward-Projection Engine
+            Kelvin Wave Scenario Explorer
           </h3>
           <p className="text-sm text-slate-300 max-w-2xl mt-1">
-            Estimate the future arrival times of the subsurface heat wave across key Pacific basins by tuning anomalous
-            westerly wind stress (τ_x) against historic Super El Niño benchmarks.
+            Explore how changing idealized wind forcing affects a simplified wave simulation. These outputs are not
+            NOAA forecasts, observed wave arrivals, or coastal hazard predictions.
           </p>
         </div>
 
@@ -291,7 +291,7 @@ export const ForwardProjection: React.FC<ForwardProjectionProps> = ({ onSyncSimu
           </div>
           <div className="text-2xl font-black text-red-400 font-mono">+{projection.projectedNino34Anomaly}°C</div>
           <div className="text-[11px] text-red-300 font-medium mt-1">
-            {projection.projectedNino34Anomaly >= 2.0 ? 'Super El Niño State' : 'Strong El Niño State'}
+            Simulated Niño 3.4 index
           </div>
         </div>
 
